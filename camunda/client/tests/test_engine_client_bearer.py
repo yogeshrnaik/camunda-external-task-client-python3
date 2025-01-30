@@ -13,7 +13,10 @@ class EngineClientAuthTest(TestCase):
     process_key = "PARALLEL_STEPS_EXAMPLE"
 
     def setUp(self):
-        self.client = EngineClient(config={"auth_basic": {"username": "demo", "password": "demo"}})
+        token = ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZW1vIn0'
+                 '.NbMsjy8QQ5nrjGTXqdTrJ6g0dqawRvZAqp4XvNt437M')
+        self.client = EngineClient(
+            config={"auth_bearer": {"access_token": token}})
 
     @responses.activate
     def test_auth_basic_start_process_success(self):
@@ -146,12 +149,13 @@ class EngineClientAuthTest(TestCase):
             "withoutTenantId": True,
             "resultEnabled": True
         }
-
+        token = ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZW1vIn0'
+                 '.NbMsjy8QQ5nrjGTXqdTrJ6g0dqawRvZAqp4XvNt437M')
         self.client.correlate_message("CANCEL_MESSAGE")
         mock_post.assert_called_with(ENGINE_LOCAL_BASE_URL + "/message",
                                      json=expected_request_payload,
                                      headers={'Content-Type': 'application/json',
-                                              'Authorization': 'Basic ZGVtbzpkZW1v'})
+                                              'Authorization': f'Bearer {token}'})
 
     @patch('requests.post')
     def test_auth_basic_correlate_message_with_business_key(self, mock_post):
@@ -161,12 +165,13 @@ class EngineClientAuthTest(TestCase):
             "businessKey": "123456",
             "resultEnabled": True
         }
-
+        token = ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZW1vIn0'
+                 '.NbMsjy8QQ5nrjGTXqdTrJ6g0dqawRvZAqp4XvNt437M')
         self.client.correlate_message("CANCEL_MESSAGE", business_key="123456")
         mock_post.assert_called_with(ENGINE_LOCAL_BASE_URL + "/message",
                                      json=expected_request_payload,
                                      headers={'Content-Type': 'application/json',
-                                              'Authorization': 'Basic ZGVtbzpkZW1v'})
+                                              'Authorization': f'Bearer {token}'})
 
     @patch('requests.post')
     def test_auth_basic_correlate_message_with_tenant_id(self, mock_post):
@@ -176,12 +181,13 @@ class EngineClientAuthTest(TestCase):
             "tenantId": "123456",
             "resultEnabled": True
         }
-
+        token = ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZW1vIn0'
+                 '.NbMsjy8QQ5nrjGTXqdTrJ6g0dqawRvZAqp4XvNt437M')
         self.client.correlate_message("CANCEL_MESSAGE", tenant_id="123456")
         mock_post.assert_called_with(ENGINE_LOCAL_BASE_URL + "/message",
                                      json=expected_request_payload,
                                      headers={'Content-Type': 'application/json',
-                                              'Authorization': 'Basic ZGVtbzpkZW1v'})
+                                              'Authorization': f'Bearer {token}'})
 
     @responses.activate
     def test_auth_basic_correlate_message_invalid_message_name_raises_exception(self):
